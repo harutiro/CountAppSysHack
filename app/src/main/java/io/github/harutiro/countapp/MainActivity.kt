@@ -64,6 +64,7 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
         label = "scale"
     )
     val backgroundColor = remember { mutableStateOf(Color(0xFF1E1E1E)) }
+    val achievementMessage = remember { mutableStateOf("") }
 
     LaunchedEffect(count) {
         if (count % 10 == 0 && count != 0) {
@@ -73,6 +74,9 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
                 Random.nextFloat(),
                 1f)
         }
+
+        if (count == 50) achievementMessage.value = "🎉 50回達成！ 🎉"
+        if (count == 100) achievementMessage.value = "🏆 100回達成！ 🏆"
     }
 
     Column(
@@ -106,6 +110,13 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
                 color = Color.White
             )
         }
+
+        Text(
+            text = achievementMessage.value,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Yellow
+        )
 
         ShareButton(count)
     }
