@@ -1,6 +1,7 @@
 package io.github.harutiro.countapp
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -66,6 +67,8 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
     val backgroundColor = remember { mutableStateOf(Color(0xFF1E1E1E)) }
     val achievementMessage = remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+
     LaunchedEffect(count) {
         if (count % 10 == 0 && count != 0) {
             backgroundColor.value = Color(
@@ -101,6 +104,11 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
                 .scale(scale),
             onClick = {
                 count++
+
+                MediaPlayer.create(context, R.raw.click_sound).apply {
+                    start()
+                    setOnCompletionListener { release() }
+                }
             }
         ) {
             Text(
