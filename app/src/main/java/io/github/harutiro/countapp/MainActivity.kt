@@ -1,8 +1,12 @@
 package io.github.harutiro.countapp
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -109,6 +113,8 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
                     start()
                     setOnCompletionListener { release() }
                 }
+                VibrationUtil.vibrate(context, 100) // 100ms 振動
+
             }
         ) {
             Text(
@@ -143,6 +149,23 @@ fun ShareButton(count: Int) {
         context.startActivity(Intent.createChooser(shareIntent, "共有"))
     }) {
         Text("シェアする")
+    }
+}
+
+object VibrationUtil {
+    fun vibrate(context: Context, duration: Long) {
+        val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(duration)
+        }
     }
 }
 
