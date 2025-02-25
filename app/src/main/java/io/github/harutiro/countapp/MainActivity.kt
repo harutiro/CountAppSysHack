@@ -1,5 +1,6 @@
 package io.github.harutiro.countapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -104,8 +106,27 @@ fun CountAppScreen(modifier: Modifier = Modifier) {
                 color = Color.White
             )
         }
+
+        ShareButton(count)
     }
 }
+
+@Composable
+fun ShareButton(count: Int) {
+    val context = LocalContext.current
+
+    Button(onClick = {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "今、$count 回カウントしました！ 🎉")
+            type = "text/plain"
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "共有"))
+    }) {
+        Text("シェアする")
+    }
+}
+
 
 @Preview
 @Composable
